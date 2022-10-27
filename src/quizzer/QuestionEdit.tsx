@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Button, Form } from "react-bootstrap";
 import { Question, QuestionType } from "../interfaces/question";
 
 import "./QuestionEdit.css";
@@ -10,7 +11,14 @@ export const QuestionEdit = ({
     editQuestion,
     removeQuestion,
     swapQuestion
-}: {}) => {
+}: {
+    index: number,
+    lastIndex: number,
+    question: Question,
+    editQuestion: (qID: number, qToEdit: Question) => void,
+    removeQuestion: (qID: number) => void,
+    swapQuestion: (qIDOne: number, qIDTwo: number) => void
+     }) => {
     const [a, b] = useState<number>(
         question.options.findIndex((s: string) => question.expected === s)
     );
@@ -19,7 +27,7 @@ export const QuestionEdit = ({
         b(0);
         const newNum =
             parseInt(e.target.value) < 1 ? 1 : parseInt(e.target.value);
-        editQuestion(question.id, {
+            editQuestion(question.id, {
             ...question,
             type: "multiple_choice_question",
             expected: "Example Answer",
@@ -27,11 +35,11 @@ export const QuestionEdit = ({
         });
     };
 
-    const switchMulti = () => {
+    const handleSwitch = (e: React.ChangeEvent<HTMLSelectElement>) => {
         b(0);
         editQuestion(question.id, {
             ...question,
-            type: "multiple_choice_question",
+            type: e.target.value as QuestionType,
             expected: "Example Answer",
             options: Array(3).fill("Example Answer")
         });
